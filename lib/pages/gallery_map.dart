@@ -20,31 +20,23 @@ class GalleryMap extends StatefulWidget {
 }
 
 class _GalleryMapState extends State<GalleryMap> {
-
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   _init();
-  // }
-
   @override
   Widget build(BuildContext context) {
-    List<Marker> _markers = [];
-    final imagesGallery = context.watch<ImagesGallery>();
+    List<Marker> markers = [];
+    final ImagesGallery imagesGallery = context.watch<ImagesGallery>();
     for (final image in imagesGallery.images) {
       if (image['gps'] != null) {
-        _markers.add(Marker(
+        markers.add(Marker(
             point: LatLng(image['gps']['lat'], image['gps']['lng']),
             width: 40,
             height: 40,
             child: GestureDetector(
               child: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
                 child: Image.memory(
                   image['bytes'],
                   fit: BoxFit.cover,
                 ),
-                borderRadius: BorderRadius.circular(50),
               ),
               onTap: () {
                 Navigator.pushNamed(context, '/image', arguments: {
@@ -77,10 +69,9 @@ class _GalleryMapState extends State<GalleryMap> {
           TileLayer(
             urlTemplate:
                 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-            // https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
             userAgentPackageName: 'com.example.app',
           ),
-          MarkerLayer(markers: _markers)
+          MarkerLayer(markers: markers)
         ],
       ),
     );

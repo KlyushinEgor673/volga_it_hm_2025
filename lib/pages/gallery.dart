@@ -10,7 +10,6 @@ class Gallery extends StatefulWidget {
 }
 
 class _GalleryState extends State<Gallery> {
-
   @override
   Widget build(BuildContext context) {
     final imagesGallery = context.watch<ImagesGallery>();
@@ -45,23 +44,26 @@ class _GalleryState extends State<Gallery> {
                   itemCount: dates.length,
                   itemBuilder: (context, i) {
                     List<Widget> imagesChildren = [];
-                    // for (final image in images){
-                    //   if (image['date'].toString().split(' ')[0] == dates[i]){
-                    //     imagesChildren.add()
-                    //   }
-                    // }
                     for (int j = 0; j < imagesGallery.images.length; ++j) {
-                      if (imagesGallery.images[j]['date'].toString().split(' ')[0] ==
+                      if (imagesGallery.images[j]['date']
+                              .toString()
+                              .split(' ')[0] ==
                           dates[i]) {
                         imagesChildren.add(GestureDetector(
-                          child: LayoutBuilder(builder: (context, constraints){
-                            return Image.memory(
-                            width:  (MediaQuery.of(context).size.width - 35) / 4,
-                            height:  (MediaQuery.of(context).size.width - 35) / 4,
-                            imagesGallery.images[j]['bytes'],
-                            fit: BoxFit.cover,
-                          );
-                          },),
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              return Image.memory(
+                                width:
+                                    (MediaQuery.of(context).size.width - 35) /
+                                        4,
+                                height:
+                                    (MediaQuery.of(context).size.width - 35) /
+                                        4,
+                                imagesGallery.images[j]['bytes'],
+                                fit: BoxFit.cover,
+                              );
+                            },
+                          ),
                           onTap: () {
                             Navigator.pushNamed(context, '/images',
                                 arguments: {'i': j});
@@ -73,35 +75,24 @@ class _GalleryState extends State<Gallery> {
                     return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${listDate[2]} ${listDate[1]}  ${listDate[0]}', style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14
-                          ),),
-                          SizedBox(height: 15,),
+                          Text(
+                            '${listDate[2]} ${listDate[1]}  ${listDate[0]}',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 14),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
                           Wrap(
                             spacing: 5,
                             runSpacing: 5,
                             children: imagesChildren,
                           ),
-                          SizedBox(height: 15,),
+                          SizedBox(
+                            height: 15,
+                          ),
                         ]);
                   })),
-        )
-
-        // SafeArea(child: Padding(
-        //   padding: EdgeInsets.only(left: 10, right: 10),
-        //   child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisSpacing: 5, crossAxisSpacing: 5),
-        // itemCount: images.length,
-        // itemBuilder: (context, i) => GestureDetector(
-        //   child: Image.memory(images[i]['bytes'], fit: BoxFit.cover,),
-        //   onTap: (){
-        // Navigator.pushNamed(context, '/images', arguments: {
-        //   'images': images,
-        //   'i': i
-        // });
-        // },)
-        // ),),
-        // ) ,
-        );
+        ));
   }
 }

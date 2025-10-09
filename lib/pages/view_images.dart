@@ -1,15 +1,13 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:volga_it_hm_2025/images_gallery.dart';
 import 'package:volga_it_hm_2025/widgets/back.dart';
 import 'package:volga_it_hm_2025/widgets/delete.dart';
-import 'package:volga_it_hm_2025/widgets/map_button.dart';
 import 'package:volga_it_hm_2025/widgets/menu.dart';
 
 class ViewImages extends StatefulWidget {
   const ViewImages({super.key, required this.i});
+
   final int i;
 
   @override
@@ -30,7 +28,6 @@ class _ViewImagesState extends State<ViewImages> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _orientation = MediaQuery.orientationOf(context);
   }
@@ -47,32 +44,43 @@ class _ViewImagesState extends State<ViewImages> {
                 children: [
                   Center(
                     child: InteractiveViewer(
-                      minScale: 0.1,
-                      maxScale: 4.0,
-                      child: Image.memory(
-                      width: double.infinity,
-                      imagesGallery.images[index]['bytes'],
-                      fit: _orientation == Orientation.portrait ? BoxFit.fitWidth : BoxFit.contain,
-                    )),
+                        minScale: 0.1,
+                        maxScale: 4.0,
+                        child: Image.memory(
+                          width: double.infinity,
+                          imagesGallery.images[index]['bytes'],
+                          fit: _orientation == Orientation.portrait
+                              ? BoxFit.fitWidth
+                              : BoxFit.contain,
+                        )),
                   ),
                   Positioned(top: 10, left: 10, child: Back()),
-                    Positioned(
-                        right: 10,
-                        top: 10,
-                        child: (imagesGallery.images[index]['gps'] != null) ? Menu(
-                          lat: imagesGallery.images[index]['gps']['lat'],
-                          lng: imagesGallery.images[index]['gps']['lng'],
-                          path: imagesGallery.images[index]['path'],
-                          lastDelete: (){
-                            if (_controller.page == imagesGallery.images.length){
-                              _controller.jumpToPage(_controller.page!.round() - 1);
-                            }
-                          },
-                        ) : Delete(path: imagesGallery.images[index]['path'], lastDelete: (){
-                           if (_controller.page == imagesGallery.images.length){
-                              _controller.jumpToPage(_controller.page!.round() - 1);
-                            }
-                        },)),
+                  Positioned(
+                      right: 10,
+                      top: 10,
+                      child: (imagesGallery.images[index]['gps'] != null)
+                          ? Menu(
+                              lat: imagesGallery.images[index]['gps']['lat'],
+                              lng: imagesGallery.images[index]['gps']['lng'],
+                              path: imagesGallery.images[index]['path'],
+                              lastDelete: () {
+                                if (_controller.page ==
+                                    imagesGallery.images.length) {
+                                  _controller.jumpToPage(
+                                      _controller.page!.round() - 1);
+                                }
+                              },
+                            )
+                          : Delete(
+                              path: imagesGallery.images[index]['path'],
+                              lastDelete: () {
+                                if (_controller.page ==
+                                    imagesGallery.images.length) {
+                                  _controller.jumpToPage(
+                                      _controller.page!.round() - 1);
+                                }
+                              },
+                            )),
                   if (imagesGallery.images[index]['gps'] == null)
                     Positioned(
                         bottom: 0,
