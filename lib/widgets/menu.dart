@@ -90,8 +90,8 @@ class _MenuState extends State<Menu> {
         if (value == 'map') {
           Navigator.pushNamed(context, '/map', arguments: {
             'initialZoom': 17.0,
-            'lat': 56.326797,
-            'lng': 44.006516
+            'lat': widget.lat,
+            'lng': widget.lng
           });
         } else {
           showDialog(
