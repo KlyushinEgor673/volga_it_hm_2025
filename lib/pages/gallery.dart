@@ -30,8 +30,8 @@ class _GalleryState extends State<Gallery> {
                 onPressed: () {
                   Navigator.pushNamed(context, '/map', arguments: {
                     'initialZoom': 11.0,
-                    'lat': 56.326797,
-                    'lng': 44.006516
+                    'lat': 54.3282,
+                    'lng': 48.3866 
                   });
                 },
                 icon: Icon(Icons.map_rounded))

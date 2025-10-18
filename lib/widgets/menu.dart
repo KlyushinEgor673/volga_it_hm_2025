@@ -47,14 +47,14 @@ class _MenuState extends State<Menu> {
             children: [
               Icon(
                 Icons.delete_rounded,
-                color: Colors.red,
+                color: Color.fromRGBO(190, 25, 25, 1),
               ),
               SizedBox(
                 width: 15,
               ),
               Text(
                 'Удалить',
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(color: Color.fromRGBO(190, 25, 25, 1)),
               )
             ],
           ),
@@ -109,7 +109,7 @@ class _MenuState extends State<Menu> {
                           widget.lastDelete();
                         },
                         style: TextButton.styleFrom(
-                          foregroundColor: Colors.blue,
+                          foregroundColor: Color.fromRGBO(190, 25, 25, 1),
                         ),
                         child: Text('ок')),
                     TextButton(

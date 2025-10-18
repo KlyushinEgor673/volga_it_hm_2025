@@ -40,7 +40,7 @@ class _DeleteState extends State<Delete> {
                         widget.lastDelete();
                       },
                       style: TextButton.styleFrom(
-                        foregroundColor: Colors.blue,
+                        foregroundColor: Color.fromRGBO(190, 25, 25, 1),
                       ),
                       child: Text('ок')),
                   TextButton(

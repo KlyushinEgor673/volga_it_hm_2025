@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
+import 'package:mime/mime.dart';
 
 class ImagesGallery extends ChangeNotifier {
   List images = [];
@@ -11,7 +12,8 @@ class ImagesGallery extends ChangeNotifier {
     images = [];
     Directory directory = Directory('Pictures');
     for (var file in directory.listSync()) {
-      if (file is File) {
+      final mimeType = lookupMimeType(file.path);
+      if (file is File &&  mimeType != null && mimeType.startsWith('image/')) {
         var bytes = await file.readAsBytes();
         final data = await readExifFromBytes(bytes);
         if (data.isEmpty) {
