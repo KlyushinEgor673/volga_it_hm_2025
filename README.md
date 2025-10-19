@@ -1,4 +1,4 @@
-Главный экран
+<p>Главный экран</p>
 <img src="./images_readme/gallery.png" alt="Галерея" width="250">
 В правом верхнем углу можно нажать на кнопку и перебросит на страницу карты
 <img src="./images_readme/map.png" alt="Карта" width="250">
