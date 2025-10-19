@@ -16,7 +16,7 @@
 
 При переходе на просмотр фотографии с главного экрана можно переходить к следующей фотографии свайпом.
 
-<div align="center">
+<div>
     <img src="./images_readme/view1.png" alt="Фотография без метаданных" width="250">
     <img src="./images_readme/view2.png" alt="Фотография c метаданными" width="250">
 </div>
