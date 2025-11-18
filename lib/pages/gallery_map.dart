@@ -20,6 +20,36 @@ class GalleryMap extends StatefulWidget {
 }
 
 class _GalleryMapState extends State<GalleryMap> {
+  final MapController _mapController = MapController();
+  late double _currentZoom;
+
+  void zoomIn(){
+    setState(() {
+      _currentZoom += 1;
+      // ignore: deprecated_member_use
+      _mapController.move(_mapController.center, _currentZoom);
+    });
+  }
+
+    void zoomOut(){
+    setState(() {
+      _currentZoom -= 1;
+      // ignore: deprecated_member_use
+      _mapController.move(_mapController.center, _currentZoom);
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _currentZoom = widget.initialZoom;
+    _mapController.mapEventStream.listen((event) {
+      // ignore: deprecated_member_use
+      _currentZoom = _mapController.zoom;
+    },);
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Marker> markers = [];
@@ -60,18 +90,61 @@ class _GalleryMapState extends State<GalleryMap> {
             icon: Icon(Icons.arrow_back_ios_new_rounded)),
         title: Text('Карта'),
       ),
-      body: FlutterMap(
-        options: MapOptions(
-          initialCenter: LatLng(widget.lat, widget.lng),
-          initialZoom: widget.initialZoom,
-        ),
+      body: Stack(
         children: [
-          TileLayer(
-            urlTemplate:
-                'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.example.app',
+          FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+              initialCenter: LatLng(widget.lat, widget.lng),
+              initialZoom: _currentZoom,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                    'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.example.app',
+              ),
+              MarkerLayer(markers: markers)
+            ],
           ),
-          MarkerLayer(markers: markers)
+          Positioned(
+            right: 10,
+            bottom: 0,
+            top: 0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: zoomIn,
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+                  child: Center(
+                    child: Icon(Icons.add, size: 40,),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: zoomOut,
+                child: Container(
+                  margin: EdgeInsets.only(top: 10),
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+                  child: Center(
+                    child: Icon(Icons.remove, size: 40,),
+                  ),
+                ),
+              ),
+            ],
+          ))
         ],
       ),
     );
