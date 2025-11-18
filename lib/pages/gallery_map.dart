@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:volga_it_hm_2025/images_gallery.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class GalleryMap extends StatefulWidget {
   const GalleryMap(
@@ -21,6 +25,7 @@ class GalleryMap extends StatefulWidget {
 
 class _GalleryMapState extends State<GalleryMap> {
   final MapController _mapController = MapController();
+  final TextEditingController _textEditingController = TextEditingController();
   late double _currentZoom;
 
   void zoomIn(){
@@ -41,7 +46,6 @@ class _GalleryMapState extends State<GalleryMap> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _currentZoom = widget.initialZoom;
     _mapController.mapEventStream.listen((event) {
@@ -104,8 +108,124 @@ class _GalleryMapState extends State<GalleryMap> {
                     'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.example.app',
               ),
-              MarkerLayer(markers: markers)
+              MarkerClusterLayerWidget(options: MarkerClusterLayerOptions(
+                markers: markers,
+                size: Size(40, 40),
+                maxClusterRadius: 35,
+                builder: (context, markers){
+                return GestureDetector(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 175, 170, 170),
+                      borderRadius: BorderRadius.circular(50)
+                    ),
+                    child: Center(child: Text(markers.length.toString(),)),
+                  ),
+                  onTap: (){
+                    List<Widget> imagesMemory = [];
+                    for (var marker in markers){
+                      final gestureDetector = marker.child as GestureDetector;
+                      final clipRRect = gestureDetector.child as ClipRRect;
+                      final imageMemory = clipRRect.child as Image;
+                      imagesMemory.add(GestureDetector(
+                                                onTap: gestureDetector.onTap,
+                        child: SizedBox(
+                          height: (MediaQuery.of(context).size.width - 35) /
+                                          4,
+                          width: (MediaQuery.of(context).size.width - 35) /
+                                          4,
+                          child: ClipRRect(borderRadius: BorderRadius.circular(10), child: imageMemory),
+                        ),
+                      ));
+                    }
+                    showModalBottomSheet(context: context, builder: (context) {
+                      return DraggableScrollableSheet(
+                          initialChildSize: 0.95, 
+                        builder: (context, scrollController) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            mainAxisSpacing: 5,
+                            crossAxisSpacing: 5,
+                            crossAxisCount: 4), itemCount: imagesMemory.length, itemBuilder: (context, i) {
+                              return imagesMemory[i];
+                            },),
+                        );
+                      },);
+                    },);
+                  },
+                );
+              }))
             ],
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            top: 15,
+            child: Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                // margin: EdgeInsets.symmetric(horizontal: 10),
+                width: 350,
+                child: TextField(
+                  controller: _textEditingController,
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(vertical: 20),
+                    prefixIcon: Icon(Icons.search, color: const Color.fromARGB(255, 175, 170, 170),),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: const Color.fromARGB(255, 175, 170, 170)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: const Color.fromARGB(255, 175, 170, 170)),
+                    )
+                  ),
+                  onEditingComplete: () async {
+                    try {
+                      Uri url = Uri.parse('https://geocode-maps.yandex.ru/v1/?apikey=22613088-b9ee-491a-8ef2-e8710df62f0f&geocode=${_textEditingController.text}&format=json');
+                      var res = await http.get(url);
+                      String coor = jsonDecode(res.body)['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'];
+                      double longitude = double.parse(coor.split(' ')[0]);
+                      double latitude = double.parse(coor.split(' ')[1]);
+                      _mapController.move(LatLng(latitude, longitude), _currentZoom);
+                    } catch (e){
+                      showDialog(
+            // ignore: use_build_context_synchronously
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                backgroundColor: Colors.white,
+                title: Text('Ошибка'),
+                content: Text('Неверный аддресс'),
+                actions: [
+                  TextButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Color.fromRGBO(190, 25, 25, 1),
+                      ),
+                      child: Text('ок')),
+                ],
+              );
+            });
+                    }
+                    // ignore: use_build_context_synchronously
+                    setState(() {
+                      _textEditingController.text = '';
+                    });
+                    FocusScope.of(context).unfocus();
+                  },
+                )
+                ),
+            ),
           ),
           Positioned(
             right: 10,

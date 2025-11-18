@@ -35,8 +35,7 @@ class _ViewImagesState extends State<ViewImages> {
   @override
   Widget build(BuildContext context) {
     ImagesGallery imagesGallery = context.watch<ImagesGallery>();
-    return SafeArea(
-        child: PageView.builder(
+    return PageView.builder(
             controller: _controller,
             itemCount: imagesGallery.images.length,
             itemBuilder: (context, index) {
@@ -103,6 +102,6 @@ class _ViewImagesState extends State<ViewImages> {
                         ))
                 ],
               );
-            }));
+            });
   }
 }

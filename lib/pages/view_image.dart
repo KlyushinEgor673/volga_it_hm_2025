@@ -32,8 +32,7 @@ class _ViewImageState extends State<ViewImage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Stack(
+    return Stack(
       children: [
         Center(
           child: InteractiveViewer(
@@ -60,6 +59,6 @@ class _ViewImageState extends State<ViewImage> {
               },
             ))
       ],
-    ));
+    );
   }
 }

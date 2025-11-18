@@ -52,15 +52,18 @@ class _GalleryState extends State<Gallery> {
                         imagesChildren.add(GestureDetector(
                           child: LayoutBuilder(
                             builder: (context, constraints) {
-                              return Image.memory(
-                                width:
-                                    (MediaQuery.of(context).size.width - 35) /
-                                        4,
-                                height:
-                                    (MediaQuery.of(context).size.width - 35) /
-                                        4,
-                                imagesGallery.images[j]['bytes'],
-                                fit: BoxFit.cover,
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.memory(
+                                  width:
+                                      (MediaQuery.of(context).size.width - 35) /
+                                          4,
+                                  height:
+                                      (MediaQuery.of(context).size.width - 35) /
+                                          4,
+                                  imagesGallery.images[j]['bytes'],
+                                  fit: BoxFit.cover,
+                                ),
                               );
                             },
                           ),
