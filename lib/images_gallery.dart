@@ -13,7 +13,7 @@ class ImagesGallery extends ChangeNotifier {
     Directory directory = Directory('Pictures');
     for (var file in directory.listSync()) {
       final mimeType = lookupMimeType(file.path);
-      if (file is File &&  mimeType != null && mimeType.startsWith('image/')) {
+      if (file is File && mimeType != null && mimeType.startsWith('image/')) {
         var bytes = await file.readAsBytes();
         final data = await readExifFromBytes(bytes);
         if (data.isEmpty) {
@@ -21,7 +21,8 @@ class ImagesGallery extends ChangeNotifier {
             'bytes': bytes,
             'gps': null,
             'date': file.lastModifiedSync(),
-            'path': file.path
+            'path': file.path,
+            'filename': file.path.split('/')[file.path.split('/').length - 1]
           });
         } else {
           IfdTag? latTag;
@@ -44,14 +45,16 @@ class ImagesGallery extends ChangeNotifier {
               'bytes': bytes,
               'gps': {'lat': lat, 'lng': lng},
               'date': file.lastModifiedSync(),
-              'path': file.path
+              'path': file.path,
+              'filename': file.path.split('/')[file.path.split('/').length - 1]
             });
           } else {
             images.add({
               'bytes': bytes,
               'gps': null,
               'date': file.lastModifiedSync(),
-              'path': file.path
+              'path': file.path,
+              'filename': file.path.split('/')[file.path.split('/').length - 1]
             });
           }
           for (int i = 0; i < images.length; ++i) {

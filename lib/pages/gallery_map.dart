@@ -5,15 +5,18 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:volga_it_hm_2025/images_gallery.dart';
+// ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
+// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 
 class GalleryMap extends StatefulWidget {
-  const GalleryMap(
-      {super.key,
-      required this.initialZoom,
-      required this.lat,
-      required this.lng});
+  const GalleryMap({
+    super.key,
+    required this.initialZoom,
+    required this.lat,
+    required this.lng,
+  });
 
   final double initialZoom;
   final double lat;
@@ -28,7 +31,7 @@ class _GalleryMapState extends State<GalleryMap> {
   final TextEditingController _textEditingController = TextEditingController();
   late double _currentZoom;
 
-  void zoomIn(){
+  void zoomIn() {
     setState(() {
       _currentZoom += 1;
       // ignore: deprecated_member_use
@@ -36,7 +39,7 @@ class _GalleryMapState extends State<GalleryMap> {
     });
   }
 
-    void zoomOut(){
+  void zoomOut() {
     setState(() {
       _currentZoom -= 1;
       // ignore: deprecated_member_use
@@ -51,7 +54,7 @@ class _GalleryMapState extends State<GalleryMap> {
     _mapController.mapEventStream.listen((event) {
       // ignore: deprecated_member_use
       _currentZoom = _mapController.zoom;
-    },);
+    });
   }
 
   @override
@@ -61,38 +64,70 @@ class _GalleryMapState extends State<GalleryMap> {
     for (final image in imagesGallery.images) {
       if (image['gps'] != null) {
         markers.add(Marker(
-            point: LatLng(image['gps']['lat'], image['gps']['lng']),
-            width: 40,
-            height: 40,
-            child: GestureDetector(
+          point: LatLng(image['gps']['lat'], image['gps']['lng']),
+          width: 50,
+          height: 50,
+          child: GestureDetector(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                border: Border.all(
+                  color: Colors.white,
+                  width: 2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    // ignore: deprecated_member_use
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(50),
+                borderRadius: BorderRadius.circular(23),
                 child: Image.memory(
                   image['bytes'],
                   fit: BoxFit.cover,
                 ),
               ),
-              onTap: () {
-                Navigator.pushNamed(context, '/image', arguments: {
-                  'bytes': image['bytes'],
-                  'lat': image['gps']['lat'],
-                  'lng': image['gps']['lng'],
-                  'path': image['path']
-                });
-              },
-            )));
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, '/image', arguments: {
+                'bytes': image['bytes'],
+                'lat': image['gps']['lat'],
+                'lng': image['gps']['lng'],
+                'path': image['path'],
+              });
+            },
+          ),
+        ));
       }
     }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
+        elevation: 1,
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back_ios_new_rounded)),
-        title: Text('Карта'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.black87,
+          ),
+        ),
+        title: const Text(
+          'Карта фотографий',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: Stack(
         children: [
@@ -108,163 +143,341 @@ class _GalleryMapState extends State<GalleryMap> {
                     'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.example.app',
               ),
-              MarkerClusterLayerWidget(options: MarkerClusterLayerOptions(
-                markers: markers,
-                size: Size(40, 40),
-                maxClusterRadius: 35,
-                builder: (context, markers){
-                return GestureDetector(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 175, 170, 170),
-                      borderRadius: BorderRadius.circular(50)
-                    ),
-                    child: Center(child: Text(markers.length.toString(),)),
-                  ),
-                  onTap: (){
-                    List<Widget> imagesMemory = [];
-                    for (var marker in markers){
-                      final gestureDetector = marker.child as GestureDetector;
-                      final clipRRect = gestureDetector.child as ClipRRect;
-                      final imageMemory = clipRRect.child as Image;
-                      imagesMemory.add(GestureDetector(
-                                                onTap: gestureDetector.onTap,
-                        child: SizedBox(
-                          height: (MediaQuery.of(context).size.width - 35) /
-                                          4,
-                          width: (MediaQuery.of(context).size.width - 35) /
-                                          4,
-                          child: ClipRRect(borderRadius: BorderRadius.circular(10), child: imageMemory),
+              MarkerClusterLayerWidget(
+                options: MarkerClusterLayerOptions(
+                  markers: markers,
+                  size: const Size(50, 50),
+                  maxClusterRadius: 40,
+                  builder: (context, markers) {
+                    return GestureDetector(
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.blue[600],
+                          borderRadius: BorderRadius.circular(25),
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              // ignore: deprecated_member_use
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                         ),
-                      ));
-                    }
-                    showModalBottomSheet(context: context, builder: (context) {
-                      return DraggableScrollableSheet(
-                          initialChildSize: 0.95, 
-                        builder: (context, scrollController) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            mainAxisSpacing: 5,
-                            crossAxisSpacing: 5,
-                            crossAxisCount: 4), itemCount: imagesMemory.length, itemBuilder: (context, i) {
-                              return imagesMemory[i];
-                            },),
+                        child: Center(
+                          child: Text(
+                            markers.length.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        List<Widget> imagesMemory = [];
+                        for (var marker in markers) {
+                          final gestureDetector =
+                              marker.child as GestureDetector;
+                          final container = gestureDetector.child as Container;
+                          final clipRRect = container.child as ClipRRect;
+                          final imageMemory = clipRRect.child as Image;
+
+                          imagesMemory.add(
+                            GestureDetector(
+                              onTap: gestureDetector.onTap,
+                              child: Container(
+                                margin: const EdgeInsets.all(2),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          // ignore: deprecated_member_use
+                                          color: Colors.black.withOpacity(0.2),
+                                          blurRadius: 6,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: imageMemory,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+
+                        showModalBottomSheet(
+                          context: context,
+                          backgroundColor: Colors.transparent,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return DraggableScrollableSheet(
+                              initialChildSize: 0.85,
+                              minChildSize: 0.5,
+                              maxChildSize: 0.95,
+                              builder: (context, scrollController) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        // ignore: deprecated_member_use
+                                        color: Colors.black.withOpacity(0.3),
+                                        blurRadius: 20,
+                                        offset: const Offset(0, -2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      // Хендл для перетаскивания
+                                      Container(
+                                        margin: const EdgeInsets.only(top: 8),
+                                        width: 40,
+                                        height: 4,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[400],
+                                          borderRadius:
+                                              BorderRadius.circular(2),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(16),
+                                        child: Text(
+                                          '${markers.length} фотографий в этой области',
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16),
+                                          child: GridView.builder(
+                                            controller: scrollController,
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                              mainAxisSpacing: 8,
+                                              crossAxisSpacing: 8,
+                                              crossAxisCount: 4,
+                                              childAspectRatio: 1,
+                                            ),
+                                            itemCount: imagesMemory.length,
+                                            itemBuilder: (context, i) {
+                                              return imagesMemory[i];
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
                         );
-                      },);
-                    },);
+                      },
+                    );
                   },
-                );
-              }))
+                ),
+              ),
             ],
           ),
+
+          // Поисковая строка
           Positioned(
             left: 0,
             right: 0,
-            top: 15,
+            top: 16,
             child: Center(
               child: Container(
+                width: MediaQuery.of(context).size.width * 0.9,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      // ignore: deprecated_member_use
+                      color: Colors.black.withOpacity(0.15),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                // margin: EdgeInsets.symmetric(horizontal: 10),
-                width: 350,
                 child: TextField(
                   controller: _textEditingController,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
+                    color: Colors.black87,
                   ),
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 20),
-                    prefixIcon: Icon(Icons.search, color: const Color.fromARGB(255, 175, 170, 170),),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: const Color.fromARGB(255, 175, 170, 170)),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 20,
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: const Color.fromARGB(255, 175, 170, 170)),
-                    )
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.blue[600],
+                      size: 24,
+                    ),
+                    hintText: 'Поиск места...',
+                    hintStyle: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
                   ),
                   onEditingComplete: () async {
+                    if (_textEditingController.text.trim().isEmpty) return;
+
                     try {
-                      Uri url = Uri.parse('https://geocode-maps.yandex.ru/v1/?apikey=22613088-b9ee-491a-8ef2-e8710df62f0f&geocode=${_textEditingController.text}&format=json');
+                      Uri url = Uri.parse(
+                        'https://geocode-maps.yandex.ru/v1/?apikey=22613088-b9ee-491a-8ef2-e8710df62f0f&geocode=${_textEditingController.text}&format=json',
+                      );
                       var res = await http.get(url);
-                      String coor = jsonDecode(res.body)['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'];
+                      String coor = jsonDecode(res.body)['response']
+                              ['GeoObjectCollection']['featureMember'][0]
+                          ['GeoObject']['Point']['pos'];
                       double longitude = double.parse(coor.split(' ')[0]);
                       double latitude = double.parse(coor.split(' ')[1]);
-                      _mapController.move(LatLng(latitude, longitude), _currentZoom);
-                    } catch (e){
+                      _mapController.move(
+                          LatLng(latitude, longitude), _currentZoom);
+                    } catch (e) {
                       showDialog(
-            // ignore: use_build_context_synchronously
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                backgroundColor: Colors.white,
-                title: Text('Ошибка'),
-                content: Text('Неверный аддресс'),
-                actions: [
-                  TextButton(
-                      onPressed: () async {
-                        Navigator.pop(context);
-                      },
-                      style: TextButton.styleFrom(
-                        foregroundColor: Color.fromRGBO(190, 25, 25, 1),
-                      ),
-                      child: Text('ок')),
-                ],
-              );
-            });
+                        // ignore: use_build_context_synchronously
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            title: const Text(
+                              'Ошибка',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            content:
+                                const Text('Не удалось найти указанный адрес'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colors.blue[600],
+                                ),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     }
-                    // ignore: use_build_context_synchronously
+
                     setState(() {
                       _textEditingController.text = '';
                     });
+                    // ignore: use_build_context_synchronously
                     FocusScope.of(context).unfocus();
                   },
-                )
                 ),
+              ),
             ),
           ),
+
+          // Контролы масштабирования
           Positioned(
-            right: 10,
-            bottom: 0,
-            top: 0,
+            right: 16,
+            bottom: 120,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: zoomIn,
-                child: Container(
-                  width: 60,
-                  height: 60,
+              children: [
+                // Кнопка увеличения
+                Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20)
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        // ignore: deprecated_member_use
+                        color: Colors.black.withOpacity(0.15),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                  child: Center(
-                    child: Icon(Icons.add, size: 40,),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(16),
+                      onTap: zoomIn,
+                      child: SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Icon(
+                          Icons.add,
+                          size: 24,
+                          color: Colors.blue[600],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              GestureDetector(
-                onTap: zoomOut,
-                child: Container(
-                  margin: EdgeInsets.only(top: 10),
-                  width: 60,
-                  height: 60,
+                const SizedBox(height: 12),
+                // Кнопка уменьшения
+                Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20)
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        // ignore: deprecated_member_use
+                        color: Colors.black.withOpacity(0.15),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                  child: Center(
-                    child: Icon(Icons.remove, size: 40,),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(16),
+                      onTap: zoomOut,
+                      child: SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Icon(
+                          Icons.remove,
+                          size: 24,
+                          color: Colors.blue[600],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ))
+              ],
+            ),
+          ),
         ],
       ),
     );
