@@ -182,9 +182,11 @@ class _MenuState extends State<Menu> {
                 );
               });
         } else if (value == 'change_size') {
-          print(path);
-          Navigator.pushNamed(context, '/change_size',
-              arguments: {'path': path});
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/',
+            (route) => false, // Удаляет всю историю
+          );
           // final croppedFile = await ImageCropper().cropImage(
           //   sourcePath: widget.path,
           //   uiSettings: [

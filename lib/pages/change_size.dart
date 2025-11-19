@@ -87,7 +87,11 @@ class _ChangeSizeState extends State<ChangeSize> {
       File(widget.path).writeAsBytesSync(img.encodePng(croppedImage));
       // Возвращаемся с результатом (путь к тому же файлу)
       if (mounted) {
-        Navigator.pushNamed(context, '/');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/',
+          (route) => false, // Удаляет всю историю
+        );
       }
     } catch (e) {
       print('Ошибка при обрезке изображения: $e');
