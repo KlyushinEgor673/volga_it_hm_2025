@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metadata_god/metadata_god.dart';
 // import 'package:image_picker_aurora/image_picker_aurora.dart';
 import 'package:provider/provider.dart';
 import 'package:volga_it_hm_2025/images_gallery.dart';
@@ -11,6 +12,8 @@ import 'package:volga_it_hm_2025/pages/view_images.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await MetadataGod.initialize();
   // setUpDefaultAuroraCameraDelegate(navigatorKey);
   ImagesGallery imagesGallery = ImagesGallery();
   await imagesGallery.initImages();

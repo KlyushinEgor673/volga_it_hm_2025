@@ -182,11 +182,9 @@ class _MenuState extends State<Menu> {
                 );
               });
         } else if (value == 'change_size') {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/',
-            (route) => false, // Удаляет всю историю
-          );
+          print('CHANGE');
+          Navigator.pushNamed(context, '/change_size',
+              arguments: {'path': path});
           // final croppedFile = await ImageCropper().cropImage(
           //   sourcePath: widget.path,
           //   uiSettings: [
@@ -206,10 +204,9 @@ class _MenuState extends State<Menu> {
           //   ],
           // );
         } else if (value == 'share') {
-          final url = Uri.parse('https://auroraos.ru');
+          final url = Uri.parse('mailto:test@test.com');
           await launchUrl(
             url,
-            mode: LaunchMode.externalApplication,
           );
         } else {
           showDialog(

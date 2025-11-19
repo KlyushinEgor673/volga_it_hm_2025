@@ -57,7 +57,9 @@ dependencies:
   resizable_widget: ^1.0.5
   # image: ^4.5.4
   url_launcher: ^6.3.2
-  image: ^4.5.4
+  crop_your_image: ^2.0.0
+  metadata_god: ^1.1.0
+  # image: ^4.5.4
 
 flutter:
   uses-material-design: true
