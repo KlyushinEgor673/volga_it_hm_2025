@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:provider/provider.dart';
 import 'package:volga_it_hm_2025/images_gallery.dart';
 
@@ -21,134 +20,269 @@ class _GalleryState extends State<Gallery> {
         dates.add(date);
       }
     }
+
     return Scaffold(
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/map', arguments: {
-                    'initialZoom': 11.0,
-                    'lat': 54.3282,
-                    'lng': 48.3866
-                  });
-                },
-                icon: Icon(Icons.map_rounded))
-          ],
+        surfaceTintColor: Colors.white,
+        elevation: 1,
+        title: Text(
+          'Галерея',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
         ),
-        body: SafeArea(
-          child: Column(
-            children: [
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/map', arguments: {
+                'initialZoom': 11.0,
+                'lat': 54.3282,
+                'lng': 48.3866
+              });
+            },
+            icon: Icon(Icons.map_rounded, color: Colors.blue[700]),
+            tooltip: 'Показать на карте',
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            if (imagesGallery.images.isEmpty)
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.photo_library,
+                        size: 80,
+                        color: Colors.grey[400],
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        'Нет фотографий',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Добавьте фотографии в галерею',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else
               Expanded(
                 child: Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: ListView.builder(
-                        itemCount: dates.length,
-                        itemBuilder: (context, i) {
-                          List<Widget> imagesChildren = [];
-                          for (int j = 0;
-                              j < imagesGallery.images.length;
-                              ++j) {
-                            print(imagesGallery.images[j]['filename']);
-                            if (imagesGallery.images[j]['date']
-                                    .toString()
-                                    .split(' ')[0] ==
-                                dates[i]) {
-                              imagesChildren.add(GestureDetector(
-                                child: LayoutBuilder(
-                                  builder: (context, constraints) {
-                                    return Column(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: Image.memory(
-                                            width: (MediaQuery.of(context)
-                                                        .size
-                                                        .width -
-                                                    35) /
-                                                4,
-                                            height: (MediaQuery.of(context)
-                                                        .size
-                                                        .width -
-                                                    35) /
-                                                4,
-                                            imagesGallery.images[j]['bytes'],
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Text(
-                                            imagesGallery.images[j]['filename'])
-                                      ],
-                                    );
-                                  },
-                                ),
-                                onTap: () {
-                                  Navigator.pushNamed(context, '/images',
-                                      arguments: {'i': j});
-                                },
-                              ));
-                            }
-                          }
-                          List listDate = dates[i].split('-');
-                          return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${listDate[2]} ${listDate[1]}  ${listDate[0]}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14),
-                                ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Wrap(
-                                  spacing: 5,
-                                  runSpacing: 5,
-                                  children: imagesChildren,
-                                ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                              ]);
-                        })),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: ListView.builder(
+                    itemCount: dates.length,
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, i) {
+                      List<Widget> imagesChildren = [];
+                      for (int j = 0; j < imagesGallery.images.length; ++j) {
+                        if (imagesGallery.images[j]['date']
+                                .toString()
+                                .split(' ')[0] ==
+                            dates[i]) {
+                          imagesChildren.add(
+                            _buildImageItem(imagesGallery, j, context),
+                          );
+                        }
+                      }
+
+                      List listDate = dates[i].split('-');
+                      return _buildDateSection(listDate, imagesChildren);
+                    },
+                  ),
+                ),
               ),
-              // Container(
-              //   width: MediaQuery.of(context).size.width,
-              //   height: 65,
-              //   decoration: BoxDecoration(
-              //       // color: Colors.green,
-              //       border:
-              //           Border(top: BorderSide(color: Colors.grey, width: 1))),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //     children: [
-              //       IconButton(
-              //           onPressed: () {
-              //             Navigator.pushNamed(context, '/');
-              //           },
-              //           icon: Icon(Icons.photo)),
-              //       IconButton(
-              //           onPressed: () {
-              //             Navigator.pushNamed(context, '/gallery_map');
-              //           },
-              //           icon: Icon(Icons.map)),
-              //       IconButton(
-              //           onPressed: () async {
-              //             // ImagePickerPlatform picker =
-              //             //     ImagePickerPlatform.instance;
-              //             // await picker.getImageFromSource(
-              //             //     source: ImageSource.camera);
-              //           },
-              //           icon: Icon(Icons.camera))
-              //     ],
-              //   ),
-              // )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImageItem(
+      ImagesGallery imagesGallery, int j, BuildContext context) {
+    final filename = imagesGallery.images[j]['filename'];
+    final displayName =
+        filename.length > 12 ? '${filename.substring(0, 12)}...' : filename;
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, '/images', arguments: {'i': j});
+      },
+      child: Container(
+        margin: const EdgeInsets.all(2),
+        child: Column(
+          children: [
+            // Контейнер для изображения с тенями и скруглением
+            Container(
+              width: (MediaQuery.of(context).size.width - 60) / 3,
+              height: (MediaQuery.of(context).size.width - 60) / 3,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Stack(
+                  children: [
+                    Image.memory(
+                      imagesGallery.images[j]['bytes'],
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                    ),
+                    // Градиент для названия файла
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        height: 30,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [
+                              Colors.black.withOpacity(0.7),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // Название файла
+            const SizedBox(height: 6),
+            SizedBox(
+              width: (MediaQuery.of(context).size.width - 60) / 3,
+              child: Text(
+                displayName,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.grey[700],
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDateSection(List listDate, List<Widget> imagesChildren) {
+    final monthNames = {
+      '01': 'Января',
+      '02': 'Февраля',
+      '03': 'Марта',
+      '04': 'Апреля',
+      '05': 'Мая',
+      '06': 'Июня',
+      '07': 'Июля',
+      '08': 'Августа',
+      '09': 'Сентября',
+      '10': 'Октября',
+      '11': 'Ноября',
+      '12': 'Декабря'
+    };
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Заголовок даты
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Row(
+            children: [
+              Container(
+                width: 4,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: Colors.blue[600],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                '${listDate[2]} ${monthNames[listDate[1]]} ${listDate[0]}',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  color: Colors.grey[800],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '${imagesChildren.length}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.blue[700],
+                  ),
+                ),
+              ),
             ],
           ),
-        ));
+        ),
+        // Сетка изображений
+        Wrap(
+          spacing: 4,
+          runSpacing: 12,
+          alignment: WrapAlignment.start,
+          children: imagesChildren,
+        ),
+        const SizedBox(height: 8),
+        // Разделитель
+        Container(
+          height: 1,
+          margin: const EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.grey[300]!.withOpacity(0.5),
+                Colors.grey[300]!,
+                Colors.grey[300]!.withOpacity(0.5),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
