@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metadata_god/metadata_god.dart';
-// import 'package:image_picker_aurora/image_picker_aurora.dart';
+// ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
 import 'package:volga_it_hm_2025/images_gallery.dart';
 import 'package:volga_it_hm_2025/pages/change_size.dart';
@@ -25,7 +24,8 @@ Future<void> main() async {
         navigatorKey: navigatorKey,
         onGenerateRoute: (settings) {
           if (settings.name == '/') {
-            return PageRouteBuilder(pageBuilder: (_, __, ___) => Gallery());
+            return PageRouteBuilder(
+                pageBuilder: (_, __, ___) => const Gallery());
           } else if (settings.name == '/map') {
             final args = settings.arguments as Map;
             return PageRouteBuilder(

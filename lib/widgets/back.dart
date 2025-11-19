@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:glass_kit/glass_kit.dart';
 
 class Back extends StatelessWidget {
   const Back({super.key});
@@ -12,7 +11,7 @@ class Back extends StatelessWidget {
         height: 45,
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(50)),
-        child: Icon(Icons.arrow_back_ios_new_rounded),
+        child: const Icon(Icons.arrow_back_ios_new_rounded),
       ),
       onTap: () {
         Navigator.pop(context);

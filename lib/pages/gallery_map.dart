@@ -5,7 +5,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:volga_it_hm_2025/images_gallery.dart';
+// ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
+// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 
 class GalleryMap extends StatefulWidget {
@@ -75,6 +77,7 @@ class _GalleryMapState extends State<GalleryMap> {
                 ),
                 boxShadow: [
                   BoxShadow(
+                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 3),
@@ -159,6 +162,7 @@ class _GalleryMapState extends State<GalleryMap> {
                           ),
                           boxShadow: [
                             BoxShadow(
+                              // ignore: deprecated_member_use
                               color: Colors.black.withOpacity(0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 3),
@@ -197,6 +201,7 @@ class _GalleryMapState extends State<GalleryMap> {
                                       borderRadius: BorderRadius.circular(12),
                                       boxShadow: [
                                         BoxShadow(
+                                          // ignore: deprecated_member_use
                                           color: Colors.black.withOpacity(0.2),
                                           blurRadius: 6,
                                           offset: const Offset(0, 2),
@@ -230,6 +235,7 @@ class _GalleryMapState extends State<GalleryMap> {
                                     ),
                                     boxShadow: [
                                       BoxShadow(
+                                        // ignore: deprecated_member_use
                                         color: Colors.black.withOpacity(0.3),
                                         blurRadius: 20,
                                         offset: const Offset(0, -2),
@@ -308,6 +314,7 @@ class _GalleryMapState extends State<GalleryMap> {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
+                      // ignore: deprecated_member_use
                       color: Colors.black.withOpacity(0.15),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
@@ -356,6 +363,7 @@ class _GalleryMapState extends State<GalleryMap> {
                           LatLng(latitude, longitude), _currentZoom);
                     } catch (e) {
                       showDialog(
+                        // ignore: use_build_context_synchronously
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
@@ -390,6 +398,7 @@ class _GalleryMapState extends State<GalleryMap> {
                     setState(() {
                       _textEditingController.text = '';
                     });
+                    // ignore: use_build_context_synchronously
                     FocusScope.of(context).unfocus();
                   },
                 ),
@@ -410,6 +419,7 @@ class _GalleryMapState extends State<GalleryMap> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
+                        // ignore: deprecated_member_use
                         color: Colors.black.withOpacity(0.15),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
@@ -421,7 +431,7 @@ class _GalleryMapState extends State<GalleryMap> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(16),
                       onTap: zoomIn,
-                      child: Container(
+                      child: SizedBox(
                         width: 50,
                         height: 50,
                         child: Icon(
@@ -441,6 +451,7 @@ class _GalleryMapState extends State<GalleryMap> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
+                        // ignore: deprecated_member_use
                         color: Colors.black.withOpacity(0.15),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
@@ -452,7 +463,7 @@ class _GalleryMapState extends State<GalleryMap> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(16),
                       onTap: zoomOut,
-                      child: Container(
+                      child: SizedBox(
                         width: 50,
                         height: 50,
                         child: Icon(

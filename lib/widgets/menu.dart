@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 // import 'package:image_cropper/image_cropper.dart';
 
 class Menu extends StatefulWidget {
@@ -25,7 +25,6 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  Color _color = Colors.grey.withAlpha(50);
   Color _colorIcon = Colors.black87;
   late String path;
   final TextEditingController _textEditingController = TextEditingController();
@@ -47,6 +46,7 @@ class _MenuState extends State<Menu> {
       color: Colors.white,
       surfaceTintColor: Colors.white,
       elevation: 4,
+      // ignore: deprecated_member_use
       shadowColor: Colors.black.withOpacity(0.2),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -119,28 +119,6 @@ class _MenuState extends State<Menu> {
             ],
           ),
         ),
-        PopupMenuItem(
-          value: 'share',
-          height: 48,
-          child: Row(
-            children: [
-              Icon(
-                Icons.share_rounded,
-                color: Colors.blue[600],
-                size: 22,
-              ),
-              const SizedBox(width: 16),
-              Text(
-                'Поделиться',
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.grey[800],
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
         // const PopupMenuDivider(height: 8),
         PopupMenuItem(
           value: "delete",
@@ -184,19 +162,16 @@ class _MenuState extends State<Menu> {
       ),
       onOpened: () {
         setState(() {
-          _color = Colors.blue[50]!;
           _colorIcon = Colors.blue[600]!;
         });
       },
       onCanceled: () {
         setState(() {
-          _color = Colors.grey.withAlpha(50);
           _colorIcon = Colors.black87;
         });
       },
       onSelected: (value) async {
         setState(() {
-          _color = Colors.grey.withAlpha(50);
           _colorIcon = Colors.black87;
         });
 
@@ -214,9 +189,6 @@ class _MenuState extends State<Menu> {
             '/change_size',
             arguments: {'path': path},
           );
-        } else if (value == 'share') {
-          final url = Uri.parse('mailto:test@test.com');
-          await launchUrl(url);
         } else {
           _showDeleteConfirmationDialog();
         }
@@ -253,6 +225,7 @@ class _MenuState extends State<Menu> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
+                      // ignore: deprecated_member_use
                       color: Colors.grey.withOpacity(0.4),
                       width: 1,
                     ),
@@ -305,6 +278,7 @@ class _MenuState extends State<Menu> {
                               _textEditingController.text;
                           var newPath = newPathList.join('/');
                           await file.rename(newPath);
+                          // ignore: use_build_context_synchronously
                           Navigator.pop(context);
                         },
                         style: TextButton.styleFrom(
@@ -384,6 +358,7 @@ class _MenuState extends State<Menu> {
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.grey[700],
                           side: BorderSide(
+                            // ignore: deprecated_member_use
                             color: Colors.grey.withOpacity(0.4),
                             width: 1,
                           ),

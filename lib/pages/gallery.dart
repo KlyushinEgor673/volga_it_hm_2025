@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
 import 'package:volga_it_hm_2025/images_gallery.dart';
 
@@ -27,7 +28,7 @@ class _GalleryState extends State<Gallery> {
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         elevation: 1,
-        title: Text(
+        title: const Text(
           'Галерея',
           style: TextStyle(
             fontSize: 20,
@@ -64,7 +65,7 @@ class _GalleryState extends State<Gallery> {
                         size: 80,
                         color: Colors.grey[400],
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Text(
                         'Нет фотографий',
                         style: TextStyle(
@@ -73,7 +74,7 @@ class _GalleryState extends State<Gallery> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         'Добавьте фотографии в галерею',
                         style: TextStyle(
@@ -139,6 +140,7 @@ class _GalleryState extends State<Gallery> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
+                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
@@ -167,6 +169,7 @@ class _GalleryState extends State<Gallery> {
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter,
                             colors: [
+                              // ignore: deprecated_member_use
                               Colors.black.withOpacity(0.7),
                               Colors.transparent,
                             ],
@@ -275,8 +278,10 @@ class _GalleryState extends State<Gallery> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
+                // ignore: deprecated_member_use
                 Colors.grey[300]!.withOpacity(0.5),
                 Colors.grey[300]!,
+                // ignore: deprecated_member_use
                 Colors.grey[300]!.withOpacity(0.5),
               ],
             ),

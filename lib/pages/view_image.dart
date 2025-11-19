@@ -47,7 +47,7 @@ class _ViewImageState extends State<ViewImage> {
                       : BoxFit.contain,
                 )),
           ),
-          Positioned(top: 10, left: 10, child: Back()),
+          const Positioned(top: 10, left: 10, child: Back()),
           Positioned(
               right: 10,
               top: 10,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
 import 'package:volga_it_hm_2025/images_gallery.dart';
 import 'package:volga_it_hm_2025/widgets/back.dart';
@@ -53,7 +54,7 @@ class _ViewImagesState extends State<ViewImages> {
                             : BoxFit.contain,
                       )),
                 ),
-                Positioned(top: 10, left: 10, child: Back()),
+                const Positioned(top: 10, left: 10, child: Back()),
                 Positioned(
                     right: 10,
                     top: 10,
@@ -90,7 +91,7 @@ class _ViewImagesState extends State<ViewImages> {
                         width: double.infinity,
                         height: 50,
                         color: Colors.grey.withAlpha(200),
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             'У фотографии нет метаданных с местоположением',
                             style: TextStyle(

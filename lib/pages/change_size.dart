@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:crop_your_image/crop_your_image.dart';
+import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
-import 'package:metadata_god/metadata_god.dart';
 import 'package:volga_it_hm_2025/widgets/back.dart';
 
 class ChangeSize extends StatefulWidget {
@@ -14,12 +14,12 @@ class ChangeSize extends StatefulWidget {
 }
 
 class _ChangeSizeState extends State<ChangeSize> {
+  // ignore: prefer_typing_uninitialized_variables
   late var bytes;
   final _controller = CropController();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     final file = File(widget.path);
 
@@ -49,8 +49,24 @@ class _ChangeSizeState extends State<ChangeSize> {
 
                       DateTime lastModified = await originalFile.lastModified();
                       DateTime lastAccessed = await originalFile.lastAccessed();
+                      var bytes = await File(widget.path).readAsBytes();
+                      // img.Image? image = img.decodeImage(bytes);
+                      final metadata = await readExifFromBytes(bytes);
+                      if (metadata.isNotEmpty) {
+                        IfdTag? latTag;
+                        IfdTag? lngTag;
+                        for (final entry in metadata.entries) {
+                          if (entry.key == 'GPS GPSLatitude') {
+                            latTag = entry.value;
+                          } else if (entry.key == 'GPS GPSLongitude') {
+                            lngTag = entry.value;
+                          }
+                        }
+                        if (latTag != null && lngTag != null) {}
+                      }
 
                       await showDialog(
+                        // ignore: use_build_context_synchronously
                         context: context,
                         builder: (context) {
                           return Dialog(
@@ -108,7 +124,9 @@ class _ChangeSizeState extends State<ChangeSize> {
                                         await newFile
                                             .setLastAccessed(lastAccessed);
 
+                                        // ignore: use_build_context_synchronously
                                         Navigator.pop(context);
+                                        // ignore: use_build_context_synchronously
                                         Navigator.pop(context);
                                       },
                                       style: OutlinedButton.styleFrom(
@@ -125,14 +143,14 @@ class _ChangeSizeState extends State<ChangeSize> {
                                         ),
                                         alignment: Alignment.centerLeft,
                                       ),
-                                      icon: Icon(
+                                      icon: const Icon(
                                           Icons.add_photo_alternate_rounded,
                                           size: 22),
                                       label: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
+                                          const Text(
                                             'Создать новый файл',
                                             style: TextStyle(
                                               fontSize: 15,
@@ -152,7 +170,7 @@ class _ChangeSizeState extends State<ChangeSize> {
                                   ),
 
                                   // Кнопка замены оригинала
-                                  Container(
+                                  SizedBox(
                                     width: double.infinity,
                                     child: ElevatedButton.icon(
                                       onPressed: () async {
@@ -162,7 +180,9 @@ class _ChangeSizeState extends State<ChangeSize> {
                                         await file
                                             .setLastAccessed(lastAccessed);
 
+                                        // ignore: use_build_context_synchronously
                                         Navigator.pop(context);
+                                        // ignore: use_build_context_synchronously
                                         Navigator.pop(context);
                                       },
                                       style: ElevatedButton.styleFrom(
@@ -177,12 +197,13 @@ class _ChangeSizeState extends State<ChangeSize> {
                                         alignment: Alignment.centerLeft,
                                         elevation: 0,
                                       ),
-                                      icon: Icon(Icons.edit_rounded, size: 22),
+                                      icon: const Icon(Icons.edit_rounded,
+                                          size: 22),
                                       label: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
+                                          const Text(
                                             'Заменить оригинал',
                                             style: TextStyle(
                                               fontSize: 15,
@@ -194,6 +215,7 @@ class _ChangeSizeState extends State<ChangeSize> {
                                             style: TextStyle(
                                               fontSize: 12,
                                               color:
+                                                  // ignore: deprecated_member_use
                                                   Colors.white.withOpacity(0.9),
                                             ),
                                           ),
@@ -207,17 +229,18 @@ class _ChangeSizeState extends State<ChangeSize> {
                           );
                         },
                       );
+                      // ignore: use_build_context_synchronously
                       Navigator.pop(context);
                     case CropFailure(:final cause):
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: Text('Error'),
-                          content: Text('Failed to crop image: ${cause}'),
+                          title: const Text('Error'),
+                          content: Text('Failed to crop image: $cause'),
                           actions: [
                             TextButton(
                                 onPressed: () => Navigator.pop(context),
-                                child: Text('OK')),
+                                child: const Text('OK')),
                           ],
                         ),
                       );
@@ -225,7 +248,7 @@ class _ChangeSizeState extends State<ChangeSize> {
                 },
               ),
             ),
-            Positioned(top: 10, left: 10, child: Back()),
+            const Positioned(top: 10, left: 10, child: Back()),
             Positioned(
                 top: 10,
                 right: 10,
@@ -236,7 +259,7 @@ class _ChangeSizeState extends State<ChangeSize> {
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(50)),
-                    child: Icon(Icons.crop),
+                    child: const Icon(Icons.crop),
                   ),
                   onTap: () {
                     _controller.crop();
