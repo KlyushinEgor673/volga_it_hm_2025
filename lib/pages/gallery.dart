@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:provider/provider.dart';
 import 'package:volga_it_hm_2025/images_gallery.dart';
 
@@ -31,71 +32,123 @@ class _GalleryState extends State<Gallery> {
                   Navigator.pushNamed(context, '/map', arguments: {
                     'initialZoom': 11.0,
                     'lat': 54.3282,
-                    'lng': 48.3866 
+                    'lng': 48.3866
                   });
                 },
                 icon: Icon(Icons.map_rounded))
           ],
         ),
         body: SafeArea(
-          child: Padding(
-              padding: EdgeInsets.only(left: 10, right: 10),
-              child: ListView.builder(
-                  itemCount: dates.length,
-                  itemBuilder: (context, i) {
-                    List<Widget> imagesChildren = [];
-                    for (int j = 0; j < imagesGallery.images.length; ++j) {
-                      if (imagesGallery.images[j]['date']
-                              .toString()
-                              .split(' ')[0] ==
-                          dates[i]) {
-                        imagesChildren.add(GestureDetector(
-                          child: LayoutBuilder(
-                            builder: (context, constraints) {
-                              return ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.memory(
-                                  width:
-                                      (MediaQuery.of(context).size.width - 35) /
-                                          4,
-                                  height:
-                                      (MediaQuery.of(context).size.width - 35) /
-                                          4,
-                                  imagesGallery.images[j]['bytes'],
-                                  fit: BoxFit.cover,
+          child: Column(
+            children: [
+              Expanded(
+                child: Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    child: ListView.builder(
+                        itemCount: dates.length,
+                        itemBuilder: (context, i) {
+                          List<Widget> imagesChildren = [];
+                          for (int j = 0;
+                              j < imagesGallery.images.length;
+                              ++j) {
+                            print(imagesGallery.images[j]['filename']);
+                            if (imagesGallery.images[j]['date']
+                                    .toString()
+                                    .split(' ')[0] ==
+                                dates[i]) {
+                              imagesChildren.add(GestureDetector(
+                                child: LayoutBuilder(
+                                  builder: (context, constraints) {
+                                    return Column(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.memory(
+                                            width: (MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    35) /
+                                                4,
+                                            height: (MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    35) /
+                                                4,
+                                            imagesGallery.images[j]['bytes'],
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        Text(
+                                            imagesGallery.images[j]['filename'])
+                                      ],
+                                    );
+                                  },
                                 ),
-                              );
-                            },
-                          ),
-                          onTap: () {
-                            Navigator.pushNamed(context, '/images',
-                                arguments: {'i': j});
-                          },
-                        ));
-                      }
-                    }
-                    List listDate = dates[i].split('-');
-                    return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${listDate[2]} ${listDate[1]}  ${listDate[0]}',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Wrap(
-                            spacing: 5,
-                            runSpacing: 5,
-                            children: imagesChildren,
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                        ]);
-                  })),
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/images',
+                                      arguments: {'i': j});
+                                },
+                              ));
+                            }
+                          }
+                          List listDate = dates[i].split('-');
+                          return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${listDate[2]} ${listDate[1]}  ${listDate[0]}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Wrap(
+                                  spacing: 5,
+                                  runSpacing: 5,
+                                  children: imagesChildren,
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                              ]);
+                        })),
+              ),
+              // Container(
+              //   width: MediaQuery.of(context).size.width,
+              //   height: 65,
+              //   decoration: BoxDecoration(
+              //       // color: Colors.green,
+              //       border:
+              //           Border(top: BorderSide(color: Colors.grey, width: 1))),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //     children: [
+              //       IconButton(
+              //           onPressed: () {
+              //             Navigator.pushNamed(context, '/');
+              //           },
+              //           icon: Icon(Icons.photo)),
+              //       IconButton(
+              //           onPressed: () {
+              //             Navigator.pushNamed(context, '/gallery_map');
+              //           },
+              //           icon: Icon(Icons.map)),
+              //       IconButton(
+              //           onPressed: () async {
+              //             // ImagePickerPlatform picker =
+              //             //     ImagePickerPlatform.instance;
+              //             // await picker.getImageFromSource(
+              //             //     source: ImageSource.camera);
+              //           },
+              //           icon: Icon(Icons.camera))
+              //     ],
+              //   ),
+              // )
+            ],
+          ),
         ));
   }
 }

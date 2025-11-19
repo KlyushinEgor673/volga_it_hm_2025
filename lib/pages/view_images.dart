@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:volga_it_hm_2025/images_gallery.dart';
 import 'package:volga_it_hm_2025/widgets/back.dart';
-import 'package:volga_it_hm_2025/widgets/delete.dart';
 import 'package:volga_it_hm_2025/widgets/menu.dart';
 
 class ViewImages extends StatefulWidget {
@@ -35,73 +34,76 @@ class _ViewImagesState extends State<ViewImages> {
   @override
   Widget build(BuildContext context) {
     ImagesGallery imagesGallery = context.watch<ImagesGallery>();
-    return PageView.builder(
-            controller: _controller,
-            itemCount: imagesGallery.images.length,
-            itemBuilder: (context, index) {
-              return Stack(
-                children: [
-                  Center(
-                    child: InteractiveViewer(
-                        minScale: 0.1,
-                        maxScale: 4.0,
-                        child: Image.memory(
-                          width: double.infinity,
-                          imagesGallery.images[index]['bytes'],
-                          fit: _orientation == Orientation.portrait
-                              ? BoxFit.fitWidth
-                              : BoxFit.contain,
-                        )),
-                  ),
-                  Positioned(top: 10, left: 10, child: Back()),
+    return SafeArea(
+      child: PageView.builder(
+          controller: _controller,
+          itemCount: imagesGallery.images.length,
+          itemBuilder: (context, index) {
+            return Stack(
+              children: [
+                Center(
+                  child: InteractiveViewer(
+                      minScale: 0.1,
+                      maxScale: 4.0,
+                      child: Image.memory(
+                        width: double.infinity,
+                        imagesGallery.images[index]['bytes'],
+                        fit: _orientation == Orientation.portrait
+                            ? BoxFit.fitWidth
+                            : BoxFit.contain,
+                      )),
+                ),
+                Positioned(top: 10, left: 10, child: Back()),
+                Positioned(
+                    right: 10,
+                    top: 10,
+                    child: (imagesGallery.images[index]['gps'] != null)
+                        ? Menu(
+                            lat: imagesGallery.images[index]['gps']['lat'],
+                            lng: imagesGallery.images[index]['gps']['lng'],
+                            path: imagesGallery.images[index]['path'],
+                            lastDelete: () {
+                              if (_controller.page ==
+                                  imagesGallery.images.length) {
+                                _controller
+                                    .jumpToPage(_controller.page!.round() - 1);
+                              }
+                            },
+                            isMap: true,
+                          )
+                        : Menu(
+                            path: imagesGallery.images[index]['path'],
+                            lastDelete: () {
+                              if (_controller.page ==
+                                  imagesGallery.images.length) {
+                                _controller
+                                    .jumpToPage(_controller.page!.round() - 1);
+                              }
+                            },
+                            isMap: false)),
+                if (imagesGallery.images[index]['gps'] == null)
                   Positioned(
-                      right: 10,
-                      top: 10,
-                      child: (imagesGallery.images[index]['gps'] != null)
-                          ? Menu(
-                              lat: imagesGallery.images[index]['gps']['lat'],
-                              lng: imagesGallery.images[index]['gps']['lng'],
-                              path: imagesGallery.images[index]['path'],
-                              lastDelete: () {
-                                if (_controller.page ==
-                                    imagesGallery.images.length) {
-                                  _controller.jumpToPage(
-                                      _controller.page!.round() - 1);
-                                }
-                              },
-                            )
-                          : Delete(
-                              path: imagesGallery.images[index]['path'],
-                              lastDelete: () {
-                                if (_controller.page ==
-                                    imagesGallery.images.length) {
-                                  _controller.jumpToPage(
-                                      _controller.page!.round() - 1);
-                                }
-                              },
-                            )),
-                  if (imagesGallery.images[index]['gps'] == null)
-                    Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: Container(
-                          width: double.infinity,
-                          height: 50,
-                          color: Colors.grey.withAlpha(200),
-                          child: Center(
-                            child: Text(
-                              'У фотографии нет метаданных с местоположением',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w400,
-                                  decoration: TextDecoration.none),
-                            ),
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        width: double.infinity,
+                        height: 50,
+                        color: Colors.grey.withAlpha(200),
+                        child: Center(
+                          child: Text(
+                            'У фотографии нет метаданных с местоположением',
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                                decoration: TextDecoration.none),
                           ),
-                        ))
-                ],
-              );
-            });
+                        ),
+                      ))
+              ],
+            );
+          }),
+    );
   }
 }

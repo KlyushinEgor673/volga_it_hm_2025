@@ -32,33 +32,36 @@ class _ViewImageState extends State<ViewImage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Center(
-          child: InteractiveViewer(
-              minScale: 0.1,
-              maxScale: 4.0,
-              child: Image.memory(
-                widget.bytes,
-                width: double.infinity,
-                fit: (_orientation == Orientation.portrait)
-                    ? BoxFit.fitWidth
-                    : BoxFit.contain,
-              )),
-        ),
-        Positioned(top: 10, left: 10, child: Back()),
-        Positioned(
-            right: 10,
-            top: 10,
-            child: Menu(
-              lat: widget.lat,
-              lng: widget.lng,
-              path: widget.path,
-              lastDelete: () {
-                Navigator.pop(context);
-              },
-            ))
-      ],
+    return SafeArea(
+      child: Stack(
+        children: [
+          Center(
+            child: InteractiveViewer(
+                minScale: 0.1,
+                maxScale: 4.0,
+                child: Image.memory(
+                  widget.bytes,
+                  width: double.infinity,
+                  fit: (_orientation == Orientation.portrait)
+                      ? BoxFit.fitWidth
+                      : BoxFit.contain,
+                )),
+          ),
+          Positioned(top: 10, left: 10, child: Back()),
+          Positioned(
+              right: 10,
+              top: 10,
+              child: Menu(
+                lat: widget.lat,
+                lng: widget.lng,
+                path: widget.path,
+                lastDelete: () {
+                  Navigator.pop(context);
+                },
+                isMap: true,
+              ))
+        ],
+      ),
     );
   }
 }

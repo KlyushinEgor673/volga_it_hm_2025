@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+// import 'package:image_picker_aurora/image_picker_aurora.dart';
 import 'package:provider/provider.dart';
 import 'package:volga_it_hm_2025/images_gallery.dart';
+import 'package:volga_it_hm_2025/pages/change_size.dart';
 import 'package:volga_it_hm_2025/pages/gallery.dart';
 import 'package:volga_it_hm_2025/pages/gallery_map.dart';
 import 'package:volga_it_hm_2025/pages/view_image.dart';
 import 'package:volga_it_hm_2025/pages/view_images.dart';
+// import 'package:volga_it_hm_2025/pages/crop.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
+  // setUpDefaultAuroraCameraDelegate(navigatorKey);
   ImagesGallery imagesGallery = ImagesGallery();
   await imagesGallery.initImages();
   await imagesGallery.startListen();
@@ -14,6 +19,7 @@ Future<void> main() async {
     ChangeNotifierProvider(
       create: (context) => imagesGallery,
       child: MaterialApp(
+        navigatorKey: navigatorKey,
         onGenerateRoute: (settings) {
           if (settings.name == '/') {
             return PageRouteBuilder(pageBuilder: (_, __, ___) => Gallery());
@@ -36,6 +42,12 @@ Future<void> main() async {
                       bytes: args['bytes'],
                       lat: args['lat'],
                       lng: args['lng'],
+                      path: args['path'],
+                    ));
+          } else if (settings.name == '/change_size') {
+            final args = settings.arguments as Map;
+            return PageRouteBuilder(
+                pageBuilder: (_, __, ___) => ChangeSize(
                       path: args['path'],
                     ));
           }
